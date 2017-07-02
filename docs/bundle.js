@@ -5264,7 +5264,7 @@ var Cell = function (_Component) {
         (0, _skatejs.h)(
           'style',
           null,
-          '\n        .cell button {\n          display: block;\n          width: 100%;\n          padding: 0;\n          padding-top: 100%;\n          border: transparent;\n          background-color: #c0c0c0;\n          border-radius: 4px;\n          transition: background-color 0.2s ease-in;\n        }\n\n        .cell button:hover {\n          background-color: #e0e0e0;\n        }\n\n        .cell.lit button {\n          background-color: #ffff61;\n        }\n\n        .cell.lit button:hover {\n          background-color: #ffffc0;\n        }\n      '
+          '\n        .cell button {\n          display: block;\n          width: 100%;\n          padding: 0;\n          padding-top: 100%;\n          border: transparent;\n          background-color: #c0c0c0;\n          border-radius: 4px;\n          transition: background-color 0.2s ease-in;\n          outline: none;\n        }\n\n        .cell button:hover {\n          background-color: #e0e0e0;\n        }\n\n        .cell.lit button {\n          background-color: #ffff61;\n        }\n\n        .cell.lit button:hover {\n          background-color: #ffffc0;\n        }\n      '
         ),
         (0, _skatejs.h)('button', { type: 'button' })
       );

@@ -28,6 +28,7 @@ export default class Cell extends Component {
           background-color: #c0c0c0;
           border-radius: 4px;
           transition: background-color 0.2s ease-in;
+          outline: none;
         }
 
         .cell button:hover {
