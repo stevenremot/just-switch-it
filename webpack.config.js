@@ -15,6 +15,14 @@ module.exports = {
         from: 'manifest.json',
         to: 'manifest.json',
       },
+      {
+        from: 'assets/icon-144.png',
+        to: 'icon-144.png',
+      },
+      {
+        from: 'assets/icon-256.png',
+        to: 'icon-256.png',
+      }
     ]),
   ],
 

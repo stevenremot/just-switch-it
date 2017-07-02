@@ -1,7 +1,19 @@
 {
   "name": "Light stuff game",
   "short_name": "LSG",
-  "start_url": "/",
+  "start_url": "/light-stuff-game/",
   "display": "standalone",
-  "background_color": "black"
+  "background_color": "black",
+  "icons": [
+    {
+      "src": "icon-256.png",
+      "type": "image/png",
+      "size": "256x256"
+    },
+    {
+      "src": "icon-144.png",
+      "type": "image/png",
+      "size": "144x144"
+    }
+  ]
 }
