@@ -1,0 +1,7 @@
+{
+  "name": "Light stuff game",
+  "short_name": "LSG",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "black"
+}

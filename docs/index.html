@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Light stuff game</title>
+    <link rel="manifest" href="manifest.json" />
+    <style>
+     body {
+       margin: 0;
+       overflow: hidden;
+     }
+    </style>
+  </head>
+  <body>
+    <lsg-game></lsg-game>
+    <script>
+     if ('serviceWorker' in navigator) {
+       navigator.serviceWorker.register('service-worker.js').then(function(reg) {
+         console.log('Registration succeeded. Scope is ', reg.scope);
+       }).catch(function(error) {
+         console.log('Registration failed with ', error);
+       });
+     };
+    </script>
+  <script type="text/javascript" src="bundle.js"></script></body>
+</html>
