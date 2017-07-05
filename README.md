@@ -19,8 +19,3 @@ yarn dev:start
 ```
 yarn compile
 ```
-
-## TODO
-
-- [ ] Browser compatibility (currently works only on Chrome...)
-- [ ] Proper icon

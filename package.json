@@ -12,7 +12,6 @@
     "deploy": "yarn compile && cp dist/* docs/"
   },
   "dependencies": {
-    "@skatejs/web-components": "^1.0.0",
     "babel-core": "^6.25.0",
     "babel-loader": "^7.1.1",
     "babel-plugin-transform-react-jsx": "^6.24.1",
@@ -20,7 +19,7 @@
     "copy-webpack-plugin": "^4.0.1",
     "html-webpack-plugin": "^2.29.0",
     "preact": "^8.1.0",
-    "skatejs": "^5.0.0-alpha.10",
+    "skatejs": "4.6.7",
     "sw-precache": "^5.2.0",
     "webpack": "^3.0.0",
     "webpack-dev-server": "^2.5.0"
