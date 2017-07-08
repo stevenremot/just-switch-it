@@ -56,12 +56,17 @@ export default class Game extends Component {
     }
   }
 
+  handleBoardRef(ref) {
+    this.boardRef = ref;
+    ref.resetState();
+  }
+
   renderCallback() {
     return (
       <div style={styles.container}>
         <Hud level={this.level} best={getBest()} />
         <lsg-board
-          ref={ref => this.boardRef = ref}
+          ref={ref => this.handleBoardRef(ref)}
           level={this.level}
           onVictory={() => this.handleVictory()}
         />

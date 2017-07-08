@@ -3,11 +3,13 @@ import { h, Component, define, props } from 'skatejs';
 import Cell from './cell';
 
 const styles = {
-  container: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(3, 1fr)',
-    gridGap: '12px',
-    marginTop: '16px',
+  container(size) {
+    return {
+      display: 'grid',
+      gridTemplateColumns: `repeat(${size}, 1fr)`,
+      gridGap: '12px',
+      marginTop: '16px',
+    };
   },
 };
 
@@ -21,16 +23,36 @@ export default class Board extends Component {
     };
   }
 
+  get size() {
+    if (this.level >= 20) {
+      return 5;
+    } else if (this.level >= 10) {
+      return 4;
+    } else {
+      return 3;
+    }
+  }
+
+  get impulseNumber() {
+    if (this.level >= 20) {
+      return this.level - 19;
+    } else if (this.level >= 10) {
+      return this.level - 9;
+    } else {
+      return this.level;
+    }
+  }
+
   connectedCallback() {
     super.connectedCallback();
     this.resetState();
   }
 
   resetState() {
-    let cells = new Array(9);
+    let cells = new Array(this.size * this.size);
     cells.fill(true);
 
-    for (var i = 0; i < this.level; i += 1) {
+    for (var i = 0; i < this.impulseNumber; i += 1) {
       cells = this._triggerImpulse(
         cells,
         Math.floor(Math.random() * cells.length)
@@ -41,11 +63,11 @@ export default class Board extends Component {
   }
 
   _getXFor(index) {
-    return index % 3;
+    return index % this.size;
   }
 
   _getYFor(index) {
-    return Math.floor(index / 3);
+    return Math.floor(index / this.size);
   }
 
   _triggerImpulse(cells, cellIndex) {
@@ -88,7 +110,7 @@ export default class Board extends Component {
 
   renderCallback() {
     return (
-      <div style={styles.container}>
+        <div style={styles.container(this.size)}>
         {
           this.cells
           ? this.cells.map(this.renderCell.bind(this))
