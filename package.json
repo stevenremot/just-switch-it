@@ -5,8 +5,8 @@
   "license": "MIT",
   "scripts": {
     "dev:start": "webpack-dev-server -d",
-    "compile": "yarn clean && yarn compile:src && yarn compile:sw",
-    "clean": "rm -r dist/",
+    "compile": "yarn run clean && yarn compile:src && yarn compile:sw",
+    "clean": "rm -fr dist/",
     "compile:src": "webpack",
     "compile:sw": "sw-precache --root=dist --static-file-globs=\"dist/*\"",
     "deploy": "yarn compile && cp dist/* docs/"

@@ -8,9 +8,9 @@ import { getBest, setBest } from './db';
 
 const styles = {
   container: {
-    width: '100vw',
+    maxWidth: '80vh',
     height: '100vh',
-    backgroundColor: 'black',
+    margin: 'auto',
     color: 'white',
     fontFamily: 'Roboto, Helvetica',
     padding: '16px',

@@ -2595,9 +2595,9 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 var styles = {
   container: {
-    width: '100vw',
+    maxWidth: '80vh',
     height: '100vh',
-    backgroundColor: 'black',
+    margin: 'auto',
     color: 'white',
     fontFamily: 'Roboto, Helvetica',
     padding: '16px',
