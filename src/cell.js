@@ -22,30 +22,34 @@ export default class Cell extends Component {
           border-radius: 4px;
           transition: background-color 0.2s ease-in;
           outline: none;
+          cursor: pointer;
         }
 
         .cell.lit0 button, .cell.lit0 button:focus {
           background-color: #c0c0c0;
         }
 
-        .cell.lit0 button:hover {
-          background-color: #e0e0e0;
-        }
-
         .cell.lit1 button, .cell.lit1 button:focus {
           background-color: #ffff61;
-        }
-
-        .cell.lit1 button:hover {
-          background-color: #ffffc0;
         }
 
         .cell.lit2 button, .cell.lit2 button:focus {
           background-color: #f25656;
         }
 
-        .cell.lit2 button:hover {
-          background-color: #fca2a2;
+        @media (hover) {
+
+          .cell.lit0 button:hover {
+            background-color: #e0e0e0;
+          }
+
+          .cell.lit1 button:hover {
+            background-color: #ffffc0;
+          }
+
+          .cell.lit2 button:hover {
+            background-color: #fca2a2;
+          }
         }
       `}</style>
         <button type="button" />
