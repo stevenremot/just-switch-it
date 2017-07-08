@@ -2653,10 +2653,12 @@ var Game = function (_Component) {
   }, {
     key: 'handleBoardRef',
     value: function handleBoardRef(ref) {
-      if (!this.boardRef) {
-        ref.resetState();
+      if (ref) {
+        if (!this.boardRef) {
+          ref.resetState();
+        }
+        this.boardRef = ref;
       }
-      this.boardRef = ref;
     }
   }, {
     key: 'renderCallback',
@@ -4438,16 +4440,10 @@ var Board = function (_Component) {
     get: function get() {
       // Restart to 1 impulse with each color change / column number change
       var impulse = this.level;
-      if (impulse >= 25) {
+      if (impulse < 30) {
+        impulse -= Math.floor(impulse / 5) * 5 - 1;
+      } else {
         impulse -= 24;
-      } else if (impulse >= 20) {
-        impulse -= 19;
-      } else if (impulse >= 10) {
-        impulse -= 9;
-      }
-
-      if (impulse < 10 && impulse % 10 >= 6) {
-        impulse -= 5;
       }
 
       return impulse;
@@ -4529,7 +4525,7 @@ var Cell = function (_Component) {
         (0, _skatejs.h)(
           'style',
           null,
-          '\n        .cell button {\n          display: block;\n          width: 100%;\n          padding: 0;\n          padding-top: 100%;\n          border: transparent;\n          border-radius: 4px;\n          transition: background-color 0.2s ease-in;\n          outline: none;\n        }\n\n        .cell.lit0 button {\n          background-color: #c0c0c0;\n        }\n\n        .cell.lit0 button:hover {\n          background-color: #e0e0e0;\n        }\n\n        .cell.lit1 button {\n          background-color: #ffff61;\n        }\n\n        .cell.lit1 button:hover {\n          background-color: #ffffc0;\n        }\n\n        .cell.lit2 button {\n          background-color: #f25656;\n        }\n\n        .cell.lit2 button:hover {\n          background-color: #fca2a2;\n        }\n      '
+          '\n        .cell button {\n          display: block;\n          width: 100%;\n          padding: 0;\n          padding-top: 100%;\n          border: transparent;\n          border-radius: 4px;\n          transition: background-color 0.2s ease-in;\n          outline: none;\n        }\n\n        .cell.lit0 button, .cell.lit0 button:focus {\n          background-color: #c0c0c0;\n        }\n\n        .cell.lit0 button:hover {\n          background-color: #e0e0e0;\n        }\n\n        .cell.lit1 button, .cell.lit1 button:focus {\n          background-color: #ffff61;\n        }\n\n        .cell.lit1 button:hover {\n          background-color: #ffffc0;\n        }\n\n        .cell.lit2 button, .cell.lit2 button:focus {\n          background-color: #f25656;\n        }\n\n        .cell.lit2 button:hover {\n          background-color: #fca2a2;\n        }\n      '
         ),
         (0, _skatejs.h)('button', { type: 'button' })
       );

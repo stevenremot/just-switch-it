@@ -36,16 +36,10 @@ export default class Board extends Component {
   get impulseNumber() {
     // Restart to 1 impulse with each color change / column number change
     let impulse = this.level;
-    if (impulse >= 25) {
+    if (impulse < 30) {
+      impulse -= Math.floor(impulse / 5) * 5 - 1;
+    } else {
       impulse -= 24;
-    } else if (impulse >= 20) {
-      impulse -= 19;
-    } else if (impulse >= 10) {
-      impulse -= 9;
-    }
-
-    if (impulse < 10 && impulse % 10 >= 6) {
-      impulse -= 5;
     }
 
     return impulse;

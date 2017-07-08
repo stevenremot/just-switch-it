@@ -24,7 +24,7 @@ export default class Cell extends Component {
           outline: none;
         }
 
-        .cell.lit0 button {
+        .cell.lit0 button, .cell.lit0 button:focus {
           background-color: #c0c0c0;
         }
 
@@ -32,7 +32,7 @@ export default class Cell extends Component {
           background-color: #e0e0e0;
         }
 
-        .cell.lit1 button {
+        .cell.lit1 button, .cell.lit1 button:focus {
           background-color: #ffff61;
         }
 
@@ -40,7 +40,7 @@ export default class Cell extends Component {
           background-color: #ffffc0;
         }
 
-        .cell.lit2 button {
+        .cell.lit2 button, .cell.lit2 button:focus {
           background-color: #f25656;
         }
 
