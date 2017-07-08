@@ -57,8 +57,10 @@ export default class Game extends Component {
   }
 
   handleBoardRef(ref) {
+    if (!this.boardRef) {
+      ref.resetState();
+    }
     this.boardRef = ref;
-    ref.resetState();
   }
 
   renderCallback() {

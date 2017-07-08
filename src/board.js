@@ -34,13 +34,28 @@ export default class Board extends Component {
   }
 
   get impulseNumber() {
-    if (this.level >= 20) {
-      return this.level - 19;
-    } else if (this.level >= 10) {
-      return this.level - 9;
-    } else {
-      return this.level;
+    // Restart to 1 impulse with each color change / column number change
+    let impulse = this.level;
+    if (impulse >= 25) {
+      impulse -= 24;
+    } else if (impulse >= 20) {
+      impulse -= 19;
+    } else if (impulse >= 10) {
+      impulse -= 9;
     }
+
+    if (impulse < 10 && impulse % 10 >= 6) {
+      impulse -= 5;
+    }
+
+    return impulse;
+  }
+
+  get stateNumber() {
+    if (this.level >= 25 || this.level % 10 >= 5) {
+      return 3;
+    }
+    return 2;
   }
 
   connectedCallback() {
@@ -50,7 +65,7 @@ export default class Board extends Component {
 
   resetState() {
     let cells = new Array(this.size * this.size);
-    cells.fill(true);
+    cells.fill(1);
 
     for (var i = 0; i < this.impulseNumber; i += 1) {
       cells = this._triggerImpulse(
@@ -78,14 +93,14 @@ export default class Board extends Component {
       const y2 = this._getYFor(cellIndex);
 
       if (Math.abs(x - x2) <= 1 && Math.abs(y - y2) <= 1) {
-        return !cell;
+        return (cell + 1) % this.stateNumber;
       }
       return cell;
     });
   }
 
   get isVictory() {
-    return this.cells.every(cell => cell);
+    return this.cells.every(cell => cell === 1);
   }
 
   _checkVictory() {
@@ -102,7 +117,7 @@ export default class Board extends Component {
   renderCell(cell, index) {
     return (
       <lsg-cell
-        lit={cell}
+        state={cell}
         onClick={() => this.handleChange(index)}
       ></lsg-cell>
     );

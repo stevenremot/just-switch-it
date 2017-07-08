@@ -5,19 +5,13 @@ export default class Cell extends Component {
 
   static get props() {
     return {
-      lit: props.bool,
+      state: props.number,
     };
   }
 
   renderCallback() {
-    const classNames = ['cell'];
-
-    if (this.lit) {
-      classNames.push('lit');
-    }
-
     return (
-      <div class={classNames.join(' ')}>
+      <div class={`cell lit${this.state}`}>
         <style>{`
         .cell button {
           display: block;
@@ -25,22 +19,33 @@ export default class Cell extends Component {
           padding: 0;
           padding-top: 100%;
           border: transparent;
-          background-color: #c0c0c0;
           border-radius: 4px;
           transition: background-color 0.2s ease-in;
           outline: none;
         }
 
-        .cell button:hover {
+        .cell.lit0 button {
+          background-color: #c0c0c0;
+        }
+
+        .cell.lit0 button:hover {
           background-color: #e0e0e0;
         }
 
-        .cell.lit button {
+        .cell.lit1 button {
           background-color: #ffff61;
         }
 
-        .cell.lit button:hover {
+        .cell.lit1 button:hover {
           background-color: #ffffc0;
+        }
+
+        .cell.lit2 button {
+          background-color: #f25656;
+        }
+
+        .cell.lit2 button:hover {
+          background-color: #fca2a2;
         }
       `}</style>
         <button type="button" />

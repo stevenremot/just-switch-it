@@ -2653,8 +2653,10 @@ var Game = function (_Component) {
   }, {
     key: 'handleBoardRef',
     value: function handleBoardRef(ref) {
+      if (!this.boardRef) {
+        ref.resetState();
+      }
       this.boardRef = ref;
-      ref.resetState();
     }
   }, {
     key: 'renderCallback',
@@ -4351,7 +4353,7 @@ var Board = function (_Component) {
     key: 'resetState',
     value: function resetState() {
       var cells = new Array(this.size * this.size);
-      cells.fill(true);
+      cells.fill(1);
 
       for (var i = 0; i < this.impulseNumber; i += 1) {
         cells = this._triggerImpulse(cells, Math.floor(Math.random() * cells.length));
@@ -4381,7 +4383,7 @@ var Board = function (_Component) {
         var y2 = _this2._getYFor(cellIndex);
 
         if (Math.abs(x - x2) <= 1 && Math.abs(y - y2) <= 1) {
-          return !cell;
+          return (cell + 1) % _this2.stateNumber;
         }
         return cell;
       });
@@ -4405,7 +4407,7 @@ var Board = function (_Component) {
       var _this3 = this;
 
       return (0, _skatejs.h)('lsg-cell', {
-        lit: cell,
+        state: cell,
         onClick: function onClick() {
           return _this3.handleChange(index);
         }
@@ -4434,19 +4436,35 @@ var Board = function (_Component) {
   }, {
     key: 'impulseNumber',
     get: function get() {
-      if (this.level >= 20) {
-        return this.level - 19;
-      } else if (this.level >= 10) {
-        return this.level - 9;
-      } else {
-        return this.level;
+      // Restart to 1 impulse with each color change / column number change
+      var impulse = this.level;
+      if (impulse >= 25) {
+        impulse -= 24;
+      } else if (impulse >= 20) {
+        impulse -= 19;
+      } else if (impulse >= 10) {
+        impulse -= 9;
       }
+
+      if (impulse < 10 && impulse % 10 >= 6) {
+        impulse -= 5;
+      }
+
+      return impulse;
+    }
+  }, {
+    key: 'stateNumber',
+    get: function get() {
+      if (this.level >= 25 || this.level % 10 >= 5) {
+        return 3;
+      }
+      return 2;
     }
   }, {
     key: 'isVictory',
     get: function get() {
       return this.cells.every(function (cell) {
-        return cell;
+        return cell === 1;
       });
     }
   }], [{
@@ -4505,19 +4523,13 @@ var Cell = function (_Component) {
   _createClass(Cell, [{
     key: 'renderCallback',
     value: function renderCallback() {
-      var classNames = ['cell'];
-
-      if (this.lit) {
-        classNames.push('lit');
-      }
-
       return (0, _skatejs.h)(
         'div',
-        { 'class': classNames.join(' ') },
+        { 'class': 'cell lit' + this.state },
         (0, _skatejs.h)(
           'style',
           null,
-          '\n        .cell button {\n          display: block;\n          width: 100%;\n          padding: 0;\n          padding-top: 100%;\n          border: transparent;\n          background-color: #c0c0c0;\n          border-radius: 4px;\n          transition: background-color 0.2s ease-in;\n          outline: none;\n        }\n\n        .cell button:hover {\n          background-color: #e0e0e0;\n        }\n\n        .cell.lit button {\n          background-color: #ffff61;\n        }\n\n        .cell.lit button:hover {\n          background-color: #ffffc0;\n        }\n      '
+          '\n        .cell button {\n          display: block;\n          width: 100%;\n          padding: 0;\n          padding-top: 100%;\n          border: transparent;\n          border-radius: 4px;\n          transition: background-color 0.2s ease-in;\n          outline: none;\n        }\n\n        .cell.lit0 button {\n          background-color: #c0c0c0;\n        }\n\n        .cell.lit0 button:hover {\n          background-color: #e0e0e0;\n        }\n\n        .cell.lit1 button {\n          background-color: #ffff61;\n        }\n\n        .cell.lit1 button:hover {\n          background-color: #ffffc0;\n        }\n\n        .cell.lit2 button {\n          background-color: #f25656;\n        }\n\n        .cell.lit2 button:hover {\n          background-color: #fca2a2;\n        }\n      '
         ),
         (0, _skatejs.h)('button', { type: 'button' })
       );
@@ -4531,7 +4543,7 @@ var Cell = function (_Component) {
     key: 'props',
     get: function get() {
       return {
-        lit: _skatejs.props.bool
+        state: _skatejs.props.number
       };
     }
   }]);
