@@ -4307,6 +4307,8 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
@@ -4335,6 +4337,43 @@ var styles = {
     };
   }
 };
+
+var difficulties = [
+// Min level, size, states
+[1, 3, 2], [5, 4, 2], [10, 5, 2], [15, 3, 3], [20, 4, 3], [25, 5, 3]];
+
+var reverseDifficulties = difficulties.reverse();
+
+function getDifficultyForLevel(level) {
+  var _iteratorNormalCompletion = true;
+  var _didIteratorError = false;
+  var _iteratorError = undefined;
+
+  try {
+    for (var _iterator = reverseDifficulties[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+      var difficulty = _step.value;
+
+      if (level >= difficulty[0]) {
+        return difficulty;
+      }
+    }
+  } catch (err) {
+    _didIteratorError = true;
+    _iteratorError = err;
+  } finally {
+    try {
+      if (!_iteratorNormalCompletion && _iterator.return) {
+        _iterator.return();
+      }
+    } finally {
+      if (_didIteratorError) {
+        throw _iteratorError;
+      }
+    }
+  }
+
+  return difficulties[0];
+}
 
 var Board = function (_Component) {
   _inherits(Board, _Component);
@@ -4427,34 +4466,21 @@ var Board = function (_Component) {
   }, {
     key: 'size',
     get: function get() {
-      if (this.level >= 20) {
-        return 5;
-      } else if (this.level >= 10) {
-        return 4;
-      } else {
-        return 3;
-      }
+      return getDifficultyForLevel(this.level)[1];
     }
   }, {
     key: 'impulseNumber',
     get: function get() {
-      // Restart to 1 impulse with each color change / column number change
-      var impulse = this.level;
-      if (impulse < 30) {
-        impulse -= Math.floor(impulse / 5) * 5 - 1;
-      } else {
-        impulse -= 24;
-      }
+      var _getDifficultyForLeve = getDifficultyForLevel(this.level),
+          _getDifficultyForLeve2 = _slicedToArray(_getDifficultyForLeve, 1),
+          minLevel = _getDifficultyForLeve2[0];
 
-      return impulse;
+      return this.level - minLevel + 1;
     }
   }, {
     key: 'stateNumber',
     get: function get() {
-      if (this.level >= 25 || this.level % 10 >= 5) {
-        return 3;
-      }
-      return 2;
+      return getDifficultyForLevel(this.level)[2];
     }
   }, {
     key: 'isVictory',

@@ -13,6 +13,28 @@ const styles = {
   },
 };
 
+const difficulties = [
+  // Min level, size, states
+  [1, 3, 2],
+  [5, 4, 2],
+  [10, 5, 2],
+  [15, 3, 3],
+  [20, 4, 3],
+  [25, 5, 3],
+];
+
+const reverseDifficulties = difficulties.reverse();
+
+function getDifficultyForLevel(level) {
+  for (let difficulty of reverseDifficulties) {
+    if (level >= difficulty[0]) {
+      return difficulty;
+    }
+  }
+
+  return difficulties[0];
+}
+
 export default class Board extends Component {
   static get is() { return 'lsg-board'; }
 
@@ -24,32 +46,16 @@ export default class Board extends Component {
   }
 
   get size() {
-    if (this.level >= 20) {
-      return 5;
-    } else if (this.level >= 10) {
-      return 4;
-    } else {
-      return 3;
-    }
+    return getDifficultyForLevel(this.level)[1];
   }
 
   get impulseNumber() {
-    // Restart to 1 impulse with each color change / column number change
-    let impulse = this.level;
-    if (impulse < 30) {
-      impulse -= Math.floor(impulse / 5) * 5 - 1;
-    } else {
-      impulse -= 24;
-    }
-
-    return impulse;
+    const [minLevel] = getDifficultyForLevel(this.level);
+    return this.level - minLevel + 1;
   }
 
   get stateNumber() {
-    if (this.level >= 25 || this.level % 10 >= 5) {
-      return 3;
-    }
-    return 2;
+    return getDifficultyForLevel(this.level)[2];
   }
 
   connectedCallback() {
