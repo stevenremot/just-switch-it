@@ -2621,8 +2621,9 @@ var Game = function (_Component) {
   _createClass(Game, [{
     key: 'connectedCallback',
     value: function connectedCallback() {
+      (0, _db.openDb)();
       this.boardRef = null;
-      this.level = 1;
+      this.level = (0, _db.getCurrentLevel)();;
       _get(Game.prototype.__proto__ || Object.getPrototypeOf(Game.prototype), 'connectedCallback', this).call(this);
     }
   }, {
@@ -2630,9 +2631,7 @@ var Game = function (_Component) {
     value: function handleVictory() {
       this.isVictory = true;
 
-      if (this.level > (0, _db.getBest)()) {
-        (0, _db.setBest)(this.level);
-      }
+      (0, _db.setCurrentLevel)(this.level + 1);
     }
   }, {
     key: 'handleRestart',
@@ -2668,7 +2667,7 @@ var Game = function (_Component) {
       return (0, _skatejs.h)(
         'div',
         { style: styles.container },
-        (0, _skatejs.h)(_hud2.default, { level: this.level, best: (0, _db.getBest)() }),
+        (0, _skatejs.h)(_hud2.default, { level: this.level }),
         (0, _skatejs.h)('lsg-board', {
           ref: function ref(_ref) {
             return _this3.handleBoardRef(_ref);
@@ -4275,8 +4274,7 @@ var styles = {
 };
 
 function Hud(_ref) {
-  var level = _ref.level,
-      best = _ref.best;
+  var level = _ref.level;
 
   return (0, _skatejs.h)(
     'div',
@@ -4286,12 +4284,6 @@ function Hud(_ref) {
       null,
       'Level: ',
       level
-    ),
-    (0, _skatejs.h)(
-      'span',
-      null,
-      'Best: ',
-      best || 'N/A'
     )
   );
 }
@@ -4327,16 +4319,9 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var styles = {
-  container: function container(size) {
-    return {
-      display: 'grid',
-      gridTemplateColumns: 'repeat(' + size + ', 1fr)',
-      gridGap: '12px',
-      marginTop: '16px'
-    };
-  }
-};
+function _toArray(arr) { return Array.isArray(arr) ? arr : Array.from(arr); }
+
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
 var difficulties = [
 // Min level, size, states
@@ -4373,6 +4358,20 @@ function getDifficultyForLevel(level) {
   }
 
   return difficulties[0];
+}
+
+function splitInGroups(items, size) {
+  return items.reduce(function (groups, item, index) {
+    if (index % size === 0) {
+      return [[item]].concat(_toConsumableArray(groups));
+    }
+
+    var _groups = _toArray(groups),
+        firstGroup = _groups[0],
+        rest = _groups.slice(1);
+
+    return [[].concat(_toConsumableArray(firstGroup), [item])].concat(_toConsumableArray(rest));
+  }, []).reverse();
 }
 
 var Board = function (_Component) {
@@ -4455,12 +4454,30 @@ var Board = function (_Component) {
       });
     }
   }, {
+    key: 'renderRow',
+    value: function renderRow(cells, index) {
+      var _this4 = this;
+
+      return (0, _skatejs.h)(
+        'div',
+        { 'class': 'row' },
+        cells.map(function (cell, cellIndex) {
+          return _this4.renderCell(cell, index * _this4.size + cellIndex);
+        })
+      );
+    }
+  }, {
     key: 'renderCallback',
     value: function renderCallback() {
       return (0, _skatejs.h)(
         'div',
-        { style: styles.container(this.size) },
-        this.cells ? this.cells.map(this.renderCell.bind(this)) : null
+        { 'class': 'board' },
+        this.cells ? splitInGroups(this.cells, this.size).map(this.renderRow.bind(this)) : null,
+        (0, _skatejs.h)(
+          'style',
+          null,
+          '\n          .board {\n            margin-top: 16px;\n            display: table;\n            width: 100%;\n            border-spacing: 10px;\n\n            /* Trick to cancel outer spacing */\n            margin: 0 -10px;\n           }\n\n           .board > .row {\n             display: table-row;\n           }\n\n           .board > .row > * {\n             display: table-cell;\n           }\n        '
+        )
       );
     }
   }, {
@@ -4551,7 +4568,7 @@ var Cell = function (_Component) {
         (0, _skatejs.h)(
           'style',
           null,
-          '\n        .cell button {\n          display: block;\n          width: 100%;\n          padding: 0;\n          padding-top: 100%;\n          border: transparent;\n          border-radius: 4px;\n          transition: background-color 0.2s ease-in;\n          outline: none;\n          cursor: pointer;\n        }\n\n        .cell.lit0 button, .cell.lit0 button:focus {\n          background-color: #c0c0c0;\n        }\n\n        .cell.lit1 button, .cell.lit1 button:focus {\n          background-color: #ffff61;\n        }\n\n        .cell.lit2 button, .cell.lit2 button:focus {\n          background-color: #f25656;\n        }\n\n        @media (hover) {\n\n          .cell.lit0 button:hover {\n            background-color: #e0e0e0;\n          }\n\n          .cell.lit1 button:hover {\n            background-color: #ffffc0;\n          }\n\n          .cell.lit2 button:hover {\n            background-color: #fca2a2;\n          }\n        }\n      '
+          '\n        .cell button {\n          display: block;\n          width: 100%;\n          padding: 0;\n          padding-top: 100%;\n          border: transparent;\n          border-radius: 4px;\n          transition: background-color 0.2s ease-in;\n          outline: none;\n          cursor: pointer;\n\n          -webkit-tap-highlight-color: rgba(255, 255, 255, 0.3);\n        }\n\n        .cell.lit0 button, .cell.lit0 button:focus {\n          background-color: #c0c0c0;\n        }\n\n        .cell.lit1 button, .cell.lit1 button:focus {\n          background-color: #ffff61;\n        }\n\n        .cell.lit2 button, .cell.lit2 button:focus {\n          background-color: #f25656;\n        }\n\n        @media (hover) {\n\n          .cell.lit0 button:hover {\n            background-color: #e0e0e0;\n          }\n\n          .cell.lit1 button:hover {\n            background-color: #ffffc0;\n          }\n\n          .cell.lit2 button:hover {\n            background-color: #fca2a2;\n          }\n        }\n      '
         ),
         (0, _skatejs.h)('button', { type: 'button' })
       );
@@ -4681,14 +4698,73 @@ exports.default = VictoryScreen;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.setBest = setBest;
-exports.getBest = getBest;
-function setBest(best) {
-  localStorage.setItem('lsg-best', best);
+
+var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
+
+exports.openDb = openDb;
+exports.getCurrentLevel = getCurrentLevel;
+exports.setCurrentLevel = setCurrentLevel;
+var MIGRATIONS = [[1, function (storage) {
+  var best = storage.getItem('lsg-best');
+  storage.clear();
+  storage.setItem('lsg-current-level', +best || 1);
+}]];
+
+function getVersion() {
+  return localStorage.getItem('lsg-version') || 0;
 }
 
-function getBest() {
-  return +localStorage.getItem('lsg-best');
+function setVersion(version) {
+  localStorage.setItem('lsg-version', version);
+}
+
+function migrate() {
+  var currentVersion = getVersion();
+  var lastVersion = currentVersion;
+
+  var _iteratorNormalCompletion = true;
+  var _didIteratorError = false;
+  var _iteratorError = undefined;
+
+  try {
+    for (var _iterator = MIGRATIONS[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+      var _step$value = _slicedToArray(_step.value, 2),
+          version = _step$value[0],
+          migration = _step$value[1];
+
+      if (version > currentVersion) {
+        migration(localStorage);
+        lastVersion = version;
+      }
+    }
+  } catch (err) {
+    _didIteratorError = true;
+    _iteratorError = err;
+  } finally {
+    try {
+      if (!_iteratorNormalCompletion && _iterator.return) {
+        _iterator.return();
+      }
+    } finally {
+      if (_didIteratorError) {
+        throw _iteratorError;
+      }
+    }
+  }
+
+  setVersion(lastVersion);
+}
+
+function openDb() {
+  migrate();
+}
+
+function getCurrentLevel() {
+  return +localStorage.getItem('lsg-current-level') || 1;
+}
+
+function setCurrentLevel(level) {
+  return localStorage.setItem('lsg-current-level', +level);
 }
 
 /***/ })
