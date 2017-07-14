@@ -4,7 +4,7 @@ import Hud from './hud';
 import Board from './board';
 import VictoryScreen from './victory-screen';
 
-import { getBest, setBest } from './db';
+import { openDb, getCurrentLevel, setCurrentLevel } from './db';
 
 const styles = {
   container: {
@@ -32,17 +32,16 @@ export default class Game extends Component {
   }
 
   connectedCallback() {
+    openDb();
     this.boardRef = null;
-    this.level = 1;
+    this.level = getCurrentLevel();;
     super.connectedCallback();
   }
 
   handleVictory() {
     this.isVictory = true;
 
-    if (this.level > getBest()) {
-      setBest(this.level);
-    }
+    setCurrentLevel(this.level + 1);
   }
 
   handleRestart() {
@@ -68,7 +67,7 @@ export default class Game extends Component {
   renderCallback() {
     return (
       <div style={styles.container}>
-        <Hud level={this.level} best={getBest()} />
+        <Hud level={this.level} />
         <lsg-board
           ref={ref => this.handleBoardRef(ref)}
           level={this.level}

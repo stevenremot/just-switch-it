@@ -8,11 +8,10 @@ const styles = {
   },
 };
 
-export default function Hud({ level, best }) {
+export default function Hud({ level }) {
   return (
     <div style={styles.container}>
       <span>Level: {level}</span>
-      <span>Best: {best || 'N/A'}</span>
     </div>
   );
 }
