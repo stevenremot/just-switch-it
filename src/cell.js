@@ -23,6 +23,8 @@ export default class Cell extends Component {
           transition: background-color 0.2s ease-in;
           outline: none;
           cursor: pointer;
+
+          -webkit-tap-highlight-color: rgba(255, 255, 255, 0.3);
         }
 
         .cell.lit0 button, .cell.lit0 button:focus {
