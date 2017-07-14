@@ -2,17 +2,6 @@ import { h, Component, define, props } from 'skatejs';
 
 import Cell from './cell';
 
-const styles = {
-  container(size) {
-    return {
-      display: 'grid',
-      gridTemplateColumns: `repeat(${size}, 1fr)`,
-      gridGap: '12px',
-      marginTop: '16px',
-    };
-  },
-};
-
 const difficulties = [
   // Min level, size, states
   [1, 3, 2],
@@ -33,6 +22,20 @@ function getDifficultyForLevel(level) {
   }
 
   return difficulties[0];
+}
+
+function splitInGroups(items, size) {
+  return items.reduce(
+    (groups, item, index) => {
+      if (index % size === 0) {
+        return [[item], ...groups];
+      }
+
+      const [firstGroup, ...rest] = groups;
+      return [[...firstGroup, item], ...rest];
+    },
+    [],
+  ).reverse();
 }
 
 export default class Board extends Component {
@@ -123,14 +126,41 @@ export default class Board extends Component {
     );
   }
 
+  renderRow(cells, index) {
+    return (
+      <div class="row">
+        {cells.map((cell, cellIndex) => this.renderCell(cell, index * this.size + cellIndex))}
+      </div>
+    );
+  }
+
   renderCallback() {
     return (
-        <div style={styles.container(this.size)}>
+        <div class="board">
         {
           this.cells
-          ? this.cells.map(this.renderCell.bind(this))
-          : null
+            ? splitInGroups(this.cells, this.size).map(this.renderRow.bind(this))
+            : null
         }
+        <style>{`
+          .board {
+            margin-top: 16px;
+            display: table;
+            width: 100%;
+            border-spacing: 10px;
+
+            /* Trick to cancel outer spacing */
+            margin: 0 -10px;
+           }
+
+           .board > .row {
+             display: table-row;
+           }
+
+           .board > .row > * {
+             display: table-cell;
+           }
+        `}</style>
       </div>
     );
   }
