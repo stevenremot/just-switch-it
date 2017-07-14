@@ -20,6 +20,7 @@
     "html-webpack-plugin": "^2.29.0",
     "preact": "^8.1.0",
     "skatejs": "4.6.7",
+    "skatejs-web-components": "^0.0.1",
     "sw-precache": "^5.2.0",
     "webpack": "^3.0.0",
     "webpack-dev-server": "^2.5.0"

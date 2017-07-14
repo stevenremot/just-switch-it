@@ -4,7 +4,7 @@ var HtmlWebpackPlugin = require('html-webpack-plugin');
 var CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
-  entry: ['./src'],
+  entry: ['skatejs-web-components', './src'],
 
   plugins: [
     new HtmlWebpackPlugin({
