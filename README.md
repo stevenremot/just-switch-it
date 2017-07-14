@@ -1,4 +1,4 @@
-# Light stuff game
+# Just switch it
 
 A simple game about lighting every cell.
 

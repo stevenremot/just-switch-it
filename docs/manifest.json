@@ -1,7 +1,7 @@
 {
-  "name": "Light stuff game",
-  "short_name": "LSG",
-  "start_url": "/light-stuff-game/",
+  "name": "Just Switch It",
+  "short_name": "JSI",
+  "start_url": "/just-switch-it/",
   "display": "standalone",
   "background_color": "black",
   "icons": [
